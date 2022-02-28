@@ -12,7 +12,8 @@ const errorProcess = require('./middlewares/error-process');
 const { loginValidation, createUserValidation } = require('./middlewares/userValidation');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const cors = require('./middlewares/CORS');
-const index = require('./routes/index');
+const routes = require('./routes/index');
+const auth = require('./middlewares/auth');
 
 // Ограничиваем кол-во запросов от пользователей
 const limiter = rateLimit({
@@ -43,7 +44,8 @@ app.use(cors);
 app.post('/signin', loginValidation, login);
 app.post('/signup', createUserValidation, createUser);
 
-app.use(index);
+app.use(auth);
+app.use(routes);
 
 app.use(errorLogger); // подключаем логгер ошибок
 app.use(limiter);
