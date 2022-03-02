@@ -12,6 +12,7 @@ module.exports.createMovieValidation = celebrate({
     duration: Joi.number().required(true),
     year: Joi.string().required(true),
     description: Joi.string().required(true),
+    movieId: Joi.number().required(true),
   }),
 });
 

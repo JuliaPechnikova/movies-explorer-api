@@ -21,6 +21,7 @@ module.exports.createMovie = (req, res, next) => {
     duration,
     year,
     description,
+    movieId,
   } = req.body;
   const owner = req.user._id;
 
@@ -36,6 +37,7 @@ module.exports.createMovie = (req, res, next) => {
     year,
     description,
     owner,
+    movieId,
   })
     .then((movie) => res.status(200).send(movie))
     .catch((err) => {
