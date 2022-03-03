@@ -1,10 +1,12 @@
 const router = require('express').Router();
 const NotFoundError = require('../errors/not-found');
+const auth = require('../middlewares/auth');
 
-router.use('/users', require('./users'));
-router.use('/movies', require('./movies'));
+router.use(require('./sign'));
+router.use(require('./users'));
+router.use(require('./movies'));
 
-router.use((req, res, next) => {
+router.use(auth, (req, res, next) => {
   next(new NotFoundError('Запрос не найден'));
 });
 

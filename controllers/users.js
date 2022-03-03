@@ -6,6 +6,8 @@ const BadRequestError = require('../errors/unathorized');
 const UnathorizedError = require('../errors/unathorized');
 const ConflictError = require('../errors/conflict');
 
+const JWT_DEV = require('../utils/conf');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.login = (req, res, next) => {
@@ -14,7 +16,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        NODE_ENV === 'production' ? JWT_SECRET : JWT_DEV,
         { expiresIn: '7d' },
       );
       res.send({ token });
@@ -76,11 +78,5 @@ module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(() => new NotFoundError('Пользователь по указанному _id не найден'))
     .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Невалидный id'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
