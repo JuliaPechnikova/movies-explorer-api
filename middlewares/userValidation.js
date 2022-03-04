@@ -2,7 +2,7 @@ const { celebrate, Joi } = require('celebrate');
 
 module.exports.updateUserInfoValidation = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().minlength(2).maxlength(30).required(true),
+    name: Joi.string().min(2).max(30).required(true),
     email: Joi.string().email().required(true),
   }),
 });
@@ -16,7 +16,7 @@ module.exports.loginValidation = celebrate({
 
 module.exports.createUserValidation = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().minlength(2).maxlength(30).required(true),
+    name: Joi.string().min(2).max(30).required(true),
     email: Joi.string().email().required(true),
     password: Joi.string().required(true),
   }),
