@@ -1,12 +1,20 @@
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
+
+const customValidator = (value, helper) => {
+  if (validator.isURL(value)) {
+    return value;
+  }
+  return helper.message('Некорректно передана ссылка');
+};
 
 module.exports.createMovieValidation = celebrate({
   body: Joi.object().keys({
     nameRU: Joi.string().required(true),
     nameEN: Joi.string().required(true),
-    trailerLink: Joi.string().pattern(/^(https?:\/\/)(www.)?[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,}(\/\S*)?$/).required(true),
-    thumbnail: Joi.string().pattern(/^(https?:\/\/)(www.)?[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,}(\/\S*)?$/).required(true),
-    image: Joi.string().pattern(/^(https?:\/\/)(www.)?[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,}(\/\S*)?$/).required(true),
+    trailerLink: Joi.string().required(true).custom(customValidator),
+    thumbnail: Joi.string().required(true).custom(customValidator),
+    image: Joi.string().required(true).custom(customValidator),
     country: Joi.string().required(true),
     director: Joi.string().required(true),
     duration: Joi.number().required(true),

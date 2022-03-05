@@ -1,17 +1,15 @@
-badRequestCode = 400;
-conflictCode = 409;
-forbiddenCode = 403;
-notFoundCode = 404;
-unathorizedCode = 401;
-okCode = 200;
-internalServerCode = 500;
+const badRequestCode = 400;
+const conflictCode = 409;
+const forbiddenCode = 403;
+const notFoundCode = 404;
+const unathorizedCode = 401;
+const internalServerCode = 500;
 
 module.exports = {
-    badRequestCode,
-    conflictCode,
-    forbiddenCode,
-    notFoundCode,
-    unathorizedCode,
-    okCode,
-    internalServerCode
+  badRequestCode,
+  conflictCode,
+  forbiddenCode,
+  notFoundCode,
+  unathorizedCode,
+  internalServerCode,
 };

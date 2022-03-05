@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
@@ -5,16 +7,15 @@ const NotFoundError = require('../errors/not-found');
 const BadRequestError = require('../errors/unathorized');
 const UnathorizedError = require('../errors/unathorized');
 const ConflictError = require('../errors/conflict');
-const okCode = require('../utils/error-codes');
+
 const {
   invalidUpdateDataMessage,
   invalidCreateDataMessage,
   userIdNotFoundMessage,
   emailIsUsedMessage,
-  wrongEmailOrPassword
+  wrongEmailOrPassword,
 } = require('../utils/error-messages');
 
-require('dotenv').config();
 const JWT_DEV = require('../utils/config');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -48,7 +49,7 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then(() => res.status(okCode).send({
+    .then(() => res.status(200).send({
       data: {
         name,
         email,
@@ -73,7 +74,7 @@ module.exports.updateUserInfo = (req, res, next) => {
     runValidators: true, // данные будут валидированы перед изменением
   })
     .orFail(() => new NotFoundError(userIdNotFoundMessage))
-    .then((user) => res.status(okCode).send(user))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(invalidUpdateDataMessage));
@@ -88,6 +89,6 @@ module.exports.updateUserInfo = (req, res, next) => {
 module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(() => new NotFoundError(userIdNotFoundMessage))
-    .then((user) => res.status(okCode).send(user))
+    .then((user) => res.status(200).send(user))
     .catch(next);
 };

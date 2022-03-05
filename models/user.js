@@ -4,7 +4,7 @@ const validator = require('validator');
 const UnathorizedError = require('../errors/unathorized');
 const {
   wrongEmailOrPassword,
-  differentPasswordMessage
+  differentPasswordMessage,
 } = require('../utils/error-messages');
 
 const userSchema = new mongoose.Schema({
