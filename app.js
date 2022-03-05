@@ -15,8 +15,9 @@ const routes = require('./routes/index');
 // Ограничиваем кол-во запросов от пользователей
 const limiter = require('./utils/rate-limiter');
 
-const MONGO_ADDR = require('./utils/conf');
+const MONGO_ADDR = require('./utils/config');
 
+require('dotenv').config();
 const { PORT = 3000, MONGO_DB, NODE_ENV } = process.env;
 const app = express();
 app.use(helmet());

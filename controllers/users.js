@@ -5,8 +5,17 @@ const NotFoundError = require('../errors/not-found');
 const BadRequestError = require('../errors/unathorized');
 const UnathorizedError = require('../errors/unathorized');
 const ConflictError = require('../errors/conflict');
+const okCode = require('../utils/error-codes');
+const {
+  invalidUpdateDataMessage,
+  invalidCreateDataMessage,
+  userIdNotFoundMessage,
+  emailIsUsedMessage,
+  wrongEmailOrPassword
+} = require('../utils/error-messages');
 
-const JWT_DEV = require('../utils/conf');
+require('dotenv').config();
+const JWT_DEV = require('../utils/config');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -22,7 +31,7 @@ module.exports.login = (req, res, next) => {
       res.send({ token });
     })
     .catch(() => {
-      next(new UnathorizedError('Неправильные почта или пароль'));
+      next(new UnathorizedError(wrongEmailOrPassword));
     });
 };
 
@@ -39,7 +48,7 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then(() => res.status(200).send({
+    .then(() => res.status(okCode).send({
       data: {
         name,
         email,
@@ -47,9 +56,9 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
+        next(new BadRequestError(invalidCreateDataMessage));
       } else if (err.code === 11000) {
-        next(new ConflictError('Данный email уже используется'));
+        next(new ConflictError(emailIsUsedMessage));
       } else {
         next(err);
       }
@@ -63,11 +72,13 @@ module.exports.updateUserInfo = (req, res, next) => {
     new: true, // обработчик then получит на вход обновлённую запись
     runValidators: true, // данные будут валидированы перед изменением
   })
-    .orFail(() => new NotFoundError('Пользователь с указанным _id не найден'))
-    .then((user) => res.status(200).send(user))
+    .orFail(() => new NotFoundError(userIdNotFoundMessage))
+    .then((user) => res.status(okCode).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
+        next(new BadRequestError(invalidUpdateDataMessage));
+      } else if (err.code === 11000) {
+        next(new ConflictError(emailIsUsedMessage));
       } else {
         next(err);
       }
@@ -76,7 +87,7 @@ module.exports.updateUserInfo = (req, res, next) => {
 
 module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(() => new NotFoundError('Пользователь по указанному _id не найден'))
-    .then((user) => res.status(200).send(user))
+    .orFail(() => new NotFoundError(userIdNotFoundMessage))
+    .then((user) => res.status(okCode).send(user))
     .catch(next);
 };
