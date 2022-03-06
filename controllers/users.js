@@ -16,7 +16,7 @@ const {
   wrongEmailOrPassword,
 } = require('../utils/error-messages');
 
-const JWT_DEV = require('../utils/config');
+const { JWT_DEV } = require('../utils/config');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
