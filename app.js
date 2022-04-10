@@ -18,7 +18,7 @@ const limiter = require('./utils/rate-limiter');
 
 const { MONGO_ADDR } = require('./utils/config');
 
-const { PORT = 3000, MONGO_DB, NODE_ENV } = process.env;
+const { PORT = 3001, MONGO_DB, NODE_ENV } = process.env;
 const app = express();
 
 app.use(requestLogger);
